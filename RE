@@ -1,0 +1,185 @@
+import os, random
+
+def ClearScreen():
+    os.system('cls')
+
+def Main():
+    
+    while True:
+
+        while True:
+            
+            ClearScreen()
+
+            print("""
+            888d888 8888b. 888  888 .d88b. 88888b.  
+            888P"      "88b888  888d8P  Y8b888 "88b 
+            888    .d888888Y88  88P88888888888  888 
+            888    888  888 Y8bd8P Y8b.    888  888 
+            888    "Y888888  Y88P   "Y8888 888  888
+            
+            Encryption made easy.
+                                                """)
+            userInput = input("\n(E)ncrypt\n(D)ecrypt\n(G)enerate Key\n(N)ew Messsage\n(Q)uit\n").upper()
+
+            VALID_INPUTS = "E","D","Q","G","N"
+            
+            if userInput in VALID_INPUTS:
+                break
+
+            else:
+                input("Invalid input . . . Press enter to continue.")
+
+        ClearScreen()
+
+        if userInput == "N":
+            message = input("Message: ")
+            fileName = input("\nSave as: ")
+            
+            with open(fileName+".txt", 'w') as f:
+                f.write(message)
+
+            continue
+
+        elif userInput == "G":
+            key = ""
+
+            for i in range(1024):
+                
+                spacechance = random.randint (0,7)
+
+                if spacechance == 0:
+                    value = chr(32)
+                    key += str(value)
+                    continue
+
+                else:
+                    value = random.randint(32,122)
+                    value = chr(value)
+                    key += str(value)
+        
+            fileName = input("KEY NAME: ")
+            
+            with open(fileName+".txt", 'w') as f:
+                f.write(key)
+
+            input("Saved " + fileName + " succsefully! Press enter to return to main menu.")
+
+            continue
+            
+        elif userInput == "Q":
+            break
+
+        while True:
+            
+            if userInput == "D":
+                print("\tDECRYPTING\n")
+            
+            else:
+                print("\tENCRYPTING\n")
+
+            try:
+                FILENAME = input("Cipher Key: ") + ".txt"
+                f = open(FILENAME, encoding = "utf8")
+                break
+
+            except:
+                print("Invalid file name.\n\n\tCURRENT FILES IN DIRECTORY: ")
+                files = os.listdir()
+                for i in files:
+                    print (i)
+
+        print("Decrypting with: " + FILENAME)
+        
+        while True:
+            
+            try:
+                message = input("\nMessage: ")+".txt"
+                g = open(message, encoding = "utf8")
+                break
+
+            except:
+                print("Invalid file name.\n\n\tCURRENT FILES IN DIRECTORY: ")
+                files = os.listdir()
+                for i in files:
+                    print (i)
+        
+
+        ClearScreen()
+                
+        text = f.read()
+        text = text.split()
+        g = g.read()
+        OutMessage = ""
+        j = 0
+
+        if userInput == "E":
+
+            for i in range(0, len(g)):
+        
+                if i > len(text)-1:
+                    j = 0
+                
+                newChar = ord(g[i])
+                distance = len(text[j])
+
+                if newChar + distance > 126:
+                    position = newChar + distance - 94
+
+                else:
+                    position = newChar + distance
+
+                OutMessage += chr(position)
+                
+                j += 1
+            
+            print("MESSAGE: \n\n"+OutMessage)
+            
+            messageSave = input("Save message?: (Y/N)").upper()
+
+            if messageSave == "Y":
+                
+                fileName = input("FILENAME: ")
+                
+                with open(fileName+".txt", 'w') as f:
+                    f.write(OutMessage)
+
+            else:
+                continue
+
+        elif userInput == "D":
+
+            for i in range(0, len(g)):
+                if i > len(text)-1:
+                    j = 0
+                
+                newChar = ord(g[i])
+                distance = len(text[j])
+                
+                if newChar + distance < 33:
+                    position = newChar + distance + 94
+
+                else:
+                    position = newChar - distance
+
+                OutMessage += chr(position)
+                j += 1
+
+            print("MESSAGE: \n\n"+OutMessage)
+
+            messageSave = input("Save message?: (Y/N)").upper()
+
+            if messageSave == "Y":
+                
+                fileName = input("FILENAME: ")
+                
+                with open(fileName+".txt", 'w') as f:
+                    f.write(OutMessage)
+
+            else:
+                continue
+
+            input()
+
+
+Main()
