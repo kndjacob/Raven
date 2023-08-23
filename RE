@@ -20,9 +20,9 @@ def Main():
             
             Encryption made easy.
                                                 """)
-            userInput = input("\n(E)ncrypt\n(D)ecrypt\n(G)enerate Key\n(N)ew Messsage\n(Q)uit\n").upper()
+            userInput = input("\n(E)ncrypt - Encrypt a .txt\n(D)ecrypt - Decrypty a .txt\n(G)enerate Key - Generate a 1024 character key\n(N)ew Messsage - Create your own .txt\n(I)nformation - FIRST TIME USERS READ ME!\n(Q)uit - Exits the application\n").upper()
 
-            VALID_INPUTS = "E","D","Q","G","N"
+            VALID_INPUTS = "E","D","Q","G","N","I"
             
             if userInput in VALID_INPUTS:
                 break
@@ -33,15 +33,80 @@ def Main():
         ClearScreen()
 
         if userInput == "N":
+            print("GENERATING NEW MESSAGE . . . Q to QUIT")
+            
             message = input("Message: ")
+
+            if message == "Q" or message == "q":
+                continue
+
             fileName = input("\nSave as: ")
+
+            if fileName == "Q" or fileName == "q":
+                continue
             
             with open(fileName+".txt", 'w') as f:
                 f.write(message)
 
             continue
 
+        if userInput == "I":
+            print("""            
+                                        ! ! ! IMPORTANT ! ! ! 
+
+DO NOT USE FILE EXTENSIONS IN YOUR NAMES! THE APPLICATION AUTOMATICALLY SAVES AND LOADS FILENAMES AS "{FILENAME}.txt"
+
++-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+                                            MODULE INFORMATION
+
+Encryption - To Encrypt a message you will need a key. This can be any .txt file. It is recommended to generate a random key. Please see the Generation manual.
+                
+Decryption - To cecrypt a message you will need a key. This can be any .txt file. TO DECRYPT A MESSAGE YOU WILL NEED TO USE THE SAME KEY IT WAS ENCRYPTED WITH. ELSE IT WILL BE JUMBLED RANDOMNESS!
+                
+Message Generation - The message generation module is used to create a .txt file that contains your message to be encrypted and sent to another user.
+                
+Key Generation - The Key Generator genera---tes a randomized 1024 character cipherkey that is used to encrypt and decrypt messages. Use this to create keys to keep things secret! 
+
+                                            HOW IT WORKS
+
+The Raven application is a python program that utilizes a simple replacement process that is obtained from the decimal value of ASCII characters. To do so, the program takes a key and loops through it at the same time it does the message, and counts the length and value of of characters, and then replaces the values of each.
+
+                                            EXAMPLE PROCESS
+
+Step 1.) Generate a new key
+                
+                Select the Generate Key module.
+                Once the application finishes, save the key as a memorable name.
+                It is important that you use the same key to decrypt later.
+
+Step 2.) Generate a Message to use
+
+                Select the Generate New Message module.
+                Type our your message and then save it with a memorable name.
+                
+Step 3.) Encrypt a message
+
+                Select the Encryption Module
+                Select the cipher you want to use.
+                Select the plaintext message you want to encrypt.
+                Save the encrypted message as a memorable name.
+                
+Step 4.) Decrypt a message
+
+                Select the Decryption Module
+                Select the cipher you want to use (must be the same one used during ecryption).
+                Select the ciphertext message you want to decrypt.
+                Save the decrypted (now plaintext) message.""")
+            
+            input("\n\nPress enter to return to main menu.")
+                
+            continue
+
+
         elif userInput == "G":
+           
+            print("GENERATING NEW CIPHER KEY\n\nPRESS Q TO EXIT")
+
             key = ""
 
             for i in range(1024):
@@ -60,6 +125,9 @@ def Main():
         
             fileName = input("KEY NAME: ")
             
+            if fileName == "Q" or fileName == "q":
+                continue
+            
             with open(fileName+".txt", 'w') as f:
                 f.write(key)
 
@@ -73,13 +141,32 @@ def Main():
         while True:
             
             if userInput == "D":
-                print("\tDECRYPTING\n")
+                
+                print("\tDECRYPTING\n\nFILES IN CURRENT DIRECTORY:\n\n")
+                
+                files = os.listdir()
+                for i in files:
+                    print ("\t"+i)
+            
+                print("\n------------------------------\nPRESS Q TO EXIT\n")
             
             else:
-                print("\tENCRYPTING\n")
+                
+                print("\tENCRYPTING\n\nFILES IN CURRENT DIRECTORY:\n\n")
+
+                                
+                files = os.listdir()
+                for i in files:
+                    print ("\t"+i)
+                
+                print("\n------------------------------\n\nPRESS Q TO EXIT\n")
 
             try:
                 FILENAME = input("Cipher Key: ") + ".txt"
+
+                if FILENAME == "Q" or FILENAME == "q":
+                    continue
+
                 f = open(FILENAME, encoding = "utf8")
                 break
 
@@ -123,8 +210,8 @@ def Main():
                 newChar = ord(g[i])
                 distance = len(text[j])
 
-                if newChar + distance > 126:
-                    position = newChar + distance - 94
+                if newChar + distance > 127:
+                    position = newChar + distance - 95
 
                 else:
                     position = newChar + distance
@@ -156,8 +243,9 @@ def Main():
                 newChar = ord(g[i])
                 distance = len(text[j])
                 
-                if newChar + distance < 33:
-                    position = newChar + distance + 94
+                if newChar + distance < 32:
+                    
+                    position = newChar - distance + 95
 
                 else:
                     position = newChar - distance
@@ -172,7 +260,7 @@ def Main():
             if messageSave == "Y":
                 
                 fileName = input("FILENAME: ")
-                
+
                 with open(fileName+".txt", 'w') as f:
                     f.write(OutMessage)
 
